@@ -28,7 +28,7 @@ searchBtn.addEventListener("click", function (e) {
 
 async function getCity(city) {
   let res = await fetch(
-    `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`
+    `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`
   );
   if (res.status === 200) {
     errorMsgCont.classList.add("hide");
