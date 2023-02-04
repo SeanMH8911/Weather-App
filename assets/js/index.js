@@ -11,6 +11,7 @@ const errorMsgCont = document.querySelector(".error-msg");
 const clearHistory = document.getElementById("clear-history");
 todayContent.setAttribute("class", "todayContent");
 
+// event listner for search input and to show to data
 searchBtn.addEventListener("click", function (e) {
   e.preventDefault();
   todayContainer.innerHTML = "";
@@ -26,6 +27,7 @@ searchBtn.addEventListener("click", function (e) {
   }
 });
 
+// Geocodes lat and lon from city name
 async function getCity(city) {
   let res = await fetch(
     `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`
@@ -36,7 +38,6 @@ async function getCity(city) {
     let lon = data[0].lon;
     let lat = data[0].lat;
     getData(lat, lon);
-
     cityHistory();
   } else {
     errorMsg();
@@ -46,6 +47,7 @@ function errorMsg() {
   errorMsgCont.classList.remove("hide");
 }
 
+//  Fetches data from weather api
 async function getData(lat, lon) {
   let res = await fetch(
     `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
@@ -55,6 +57,7 @@ async function getData(lat, lon) {
   createForecast(data);
 }
 
+// Creates and displays current weather forecast
 function createTodayContent(data) {
   todayContent.innerHTML += `
   <div class="d-flex align-items-center ">
@@ -70,6 +73,8 @@ function createTodayContent(data) {
   `;
   todayContainer.appendChild(todayContent);
 }
+
+//   Creates and displays 5 day forecast
 function createForecast(data) {
   let today = dayjs().format("D");
   for (var i = 0; i < data.list.length; i++) {
@@ -105,16 +110,19 @@ function createForecast(data) {
       }
     }
   }
-  // });
 }
 
+// Resets divs containing data in order to show new selected city
 function clearItem() {
   todayContent.innerHTML = "";
 }
+
+// Url need to display weather icons
 function getImageUrl(icon) {
   return `http://openweathermap.org/img/wn/${icon}@2x.png`;
 }
 
+// Store data in local storage
 function storeCity(city) {
   let newCity = {
     name: city,
@@ -123,6 +131,8 @@ function storeCity(city) {
   localStorage.setItem("city-data", JSON.stringify(cityData));
 }
 
+// fetches the stored dat from local storage and displays in the
+// history section if data exists
 function cityHistory() {
   let cityHistory = JSON.parse(localStorage.getItem("city-data")) || [];
   if (cityHistory.length > 0) {
@@ -152,12 +162,13 @@ function cityHistory() {
 }
 cityHistory();
 
+// Convert first character of city to uppercase in history
 function upperCase(city) {
   let firstChar = city.charAt(0).toUpperCase();
   let remWord = city.slice(1);
   return firstChar + remWord;
 }
-
+// Creates and displays 5 day forecast
 function createForecastData(day) {
   forecast.innerHTML += `
   <div class="col-lg-2 forecastCard">
@@ -172,7 +183,7 @@ function createForecastData(day) {
   </div>
   `;
 }
-
+// Clears the contents of the history section
 clearHistory.addEventListener("click", () => {
   window.localStorage.clear("city-data");
   cityData = [];
