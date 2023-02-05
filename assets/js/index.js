@@ -76,10 +76,13 @@ function createTodayContent(data) {
 
 //   Creates and displays 5 day forecast
 function createForecast(data) {
-  let today = dayjs().format("D");
+  let lastDayTime = timeOfDay(data.list);
+  console.log(lastDayTime);
+  console.log(data);
+  let today = dayjs().format("DD");
   for (var i = 0; i < data.list.length; i++) {
     let day = data.list[i];
-    let futureDay = dayjs(day.dt_txt).format("D");
+    let futureDay = dayjs(day.dt_txt).format("DD");
     let dayTime = dayjs(day.dt_txt).format("HH:mm");
     let fixedTime = "12:00";
     if (futureDay > today) {
@@ -104,7 +107,7 @@ function createForecast(data) {
         }
       }
       if (futureDay == +today + 5) {
-        if (dayTime === fixedTime) {
+        if (dayTime == lastDayTime) {
           createForecastData(day);
         }
       }
@@ -190,4 +193,10 @@ clearHistory.addEventListener("click", () => {
   historyContainer.innerHTML = "";
   clearHistory.classList.add("hide");
 });
-console.log(cityData);
+
+// Getting the last available weather data of choosen day to display in forecast
+function timeOfDay(day) {
+  let lastDay = day[day.length - 1];
+  let lastTime = dayjs(lastDay.dt_txt).format("HH:mm");
+  return lastTime;
+}
