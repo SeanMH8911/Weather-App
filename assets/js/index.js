@@ -77,8 +77,6 @@ function createTodayContent(data) {
 //   Creates and displays 5 day forecast
 function createForecast(data) {
   let lastDayTime = timeOfDay(data.list);
-  console.log(lastDayTime);
-  console.log(data);
   let today = dayjs().format("DD");
   for (var i = 0; i < data.list.length; i++) {
     let day = data.list[i];
